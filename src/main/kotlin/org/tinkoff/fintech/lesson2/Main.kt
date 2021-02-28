@@ -23,4 +23,10 @@ fun main() {
         transports.forEach { print("${it.manufacturer}: "); it.go() }
         println()
     }
+
+    boeing737.removeChassis()
+    superSport950.increaseTransmission()
+    superSport950.increaseTransmission(toAdd = 2)
+    superSport950.decreaseTransmission()
+    stork.repairChain()
 }

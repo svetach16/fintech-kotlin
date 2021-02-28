@@ -6,6 +6,10 @@ class Bike(
     override val manufacturer: String,
     override val creationDate: LocalDate
 ) : Transport {
+    fun repairChain() {
+        println("Chain has been repaired!")
+    }
+
     override fun go()  {
         println("Go ahead")
     }

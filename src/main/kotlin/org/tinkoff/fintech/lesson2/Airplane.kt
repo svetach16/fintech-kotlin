@@ -9,6 +9,10 @@ class Airplane(
 ) : TransportWithEngine {
     private var remainingKerosene = 100
 
+    fun removeChassis() {
+        println("Chassis has been removed!")
+    }
+
     override fun refuel() {
         remainingKerosene = 100
     }
@@ -21,7 +25,6 @@ class Airplane(
             println("No gasoline")
         }
     }
-
 
     override fun toString(): String =
         "Airplane(manufacturer='$manufacturer', creationDate=$creationDate, horsePower=$horsePower)"
