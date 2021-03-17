@@ -12,14 +12,12 @@ class Children(
     val childrenIds: List<Int>
 )
 
-class Parent(
+data class Parent(
     val id: Int,
     val age: Int,
     val name: String,
     val childrenIds: List<Int>
-) {
-    override fun toString(): String = "Parent(name='$name', childrenIds=$childrenIds)"
-}
+)
 
 object HumanDao {
     fun getHumans() = listOf(
@@ -83,8 +81,7 @@ object Service {
 fun main() {
     println("Parents:")
     Service.getParents().forEach(System.out::println)
-    println("\nParents sorted by name:")
-    Service.getParentsSorted().forEach(System.out::println)
+    println("\nParents sorted by name: \n${Service.getParentsSorted().joinToString(separator = "\n", postfix = "\n")}")
     println("\nParents grouped by child:")
     Service.groupParentsByChild().forEach(System.out::println)
     println("\nNumber of parents with one child:")
