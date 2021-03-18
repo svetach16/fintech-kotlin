@@ -1,12 +1,10 @@
-class Human(
+data class Human(
     val id: Int,
     val age: Int,
     val name: String
-) {
-    override fun toString(): String = "Human(name='$name')"
-}
+)
 
-class Children(
+data class Children(
     val fatherId: Int,
     val motherId: Int,
     val childrenIds: List<Int>
