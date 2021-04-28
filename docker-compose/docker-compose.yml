@@ -1,0 +1,63 @@
+version: '3.1'
+
+services:
+  docker-rest-service:
+    container_name: docker-rest-service
+    image: docker-rest-service:1.0
+    environment:
+      - LOG_LEVEL=${REST_SERVICE_LOG_LEVEL}
+      - JDBC_URL=${REST_SERVICE_JDBC_URL}/${POSTGRES_DATABASE_NAME}
+      - JDBC_USER=${POSTGRES_ADMIN_USER}
+      - JDBC_PASS=${POSTGRES_ADMIN_PASSWORD}
+    depends_on:
+      - postgres
+      - docker-rest-service-meta
+    volumes:
+      - D:/tmp/logs/rest:/usr/src/logs
+    ports:
+      - "8081:8080"
+
+  docker-rest-service-meta:
+    container_name: docker-rest-service-meta
+    image: docker-rest-service-meta:1.0
+    environment:
+      - LOG_LEVEL=${REST_SERVICE_META_LOG_LEVEL}
+      - JDBC_URL=${REST_SERVICE_META_JDBC_URL}/${MYSQL_DATABASE_NAME}
+      - JDBC_USER=${MYSQL_ADMIN_USER}
+      - JDBC_PASS=${MYSQL_ADMIN_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - D:/tmp/logs/meta:/usr/src/logs
+    ports:
+      - "8082:8080"
+
+  postgres:
+    container_name: postgres
+    image: postgres:13.2
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE_NAME}
+      - POSTGRES_USER=${POSTGRES_ADMIN_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: pg_isready -U postgres
+    volumes:
+      - ./postgres-init:/docker-entrypoint-initdb.d/
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0.24
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE_NAME}
+      - MYSQL_USER=${MYSQL_ADMIN_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ADMIN_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_ADMIN_PASSWORD}
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d/
